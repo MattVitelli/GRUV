@@ -1,8 +1,9 @@
 from data_utils.parse_files import *
+import config.nn_config as nn_config
 
-#TODO - Make these command line arguments
-input_directory = 'datasets/YourMusicLibrary/'
-output_filename = 'datasets/YourMusicLibraryNP'
+config = nn_config.get_neural_net_configuration()
+input_directory = config['dataset_directory']
+output_filename = config['model_file'] 
 
 freq = 44100 		#sample frequency in Hz
 clip_len = 10 		#length of clips for training. Defined in seconds
