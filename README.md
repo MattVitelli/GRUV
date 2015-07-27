@@ -41,7 +41,7 @@ If you get an error of the following form:
 Error allocating X bytes of device memory (out of memory). Driver report Y bytes free and Z bytes total
 you must adjust the parameters in train.py - specifically, decrease the batch_size to something smaller. If you still have out of memory errors, you can also decrease the hidden_dims parameter in train.py and generate.py, although this will have a significant impact on the quality of the generated music.
 
-# Generation
+# Step 3. Generation
 After you've finished training your model, it's time to generate some music!
 Type the following command into Terminal:
 >    python generate.py
