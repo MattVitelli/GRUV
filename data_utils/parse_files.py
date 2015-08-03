@@ -45,7 +45,7 @@ def convert_flac_to_wav(filename):
 	if not os.path.exists(new_path):
 		os.makedirs(new_path)
 	new_name = new_path + '/' + orig_filename + '.wav'
-	cmd = 'sox {0} {1} channels 1'.format(quote(filename), quote(new_name))
+	cmd = 'sox {0} {1} channels 1 rate 44100'.format(quote(filename), quote(new_name))
 	os.system(cmd)
 	return new_name
 
