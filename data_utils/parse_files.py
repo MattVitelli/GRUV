@@ -1,6 +1,7 @@
 import os
 import scipy.io.wavfile as wav
 import numpy as np
+from pipes import quote
 
 def convert_mp3_to_wav(filename):
 	ext = filename[-4:]
@@ -22,16 +23,39 @@ def convert_mp3_to_wav(filename):
 		os.makedirs(tmp_path)
 	filename_tmp = tmp_path + '/' + orig_filename + '.mp3'
 	new_name = new_path + '/' + orig_filename + '.wav'
-	cmd = 'lame -a -m m \'{0}\' \'{1}\''.format(filename, filename_tmp)
+	cmd = 'lame -a -m m {0} {1}'.format(quote(filename), quote(filename_tmp))
 	os.system(cmd)
-	cmd = 'lame --decode \'{0}\' \'{1}\''.format(filename_tmp, new_name)
+	cmd = 'lame --decode {0} {1}'.format(quote(filename_tmp), quote(new_name))
 	os.system(cmd)
 	return new_name
+
+def convert_flac_to_wav(filename):
+	ext = filename[-5:]
+	if(ext != '.flac'):
+		return
+	files = filename.split('/')
+	orig_filename = files[-1][0:-5]
+	orig_path = filename[0:-len(files[-1])]
+	new_path = ''
+	if(filename[0] == '/'):
+		new_path = '/'
+	for i in xrange(len(files)-1):
+		new_path += files[i]+'/'
+	new_path += 'wave'
+	if not os.path.exists(new_path):
+		os.makedirs(new_path)
+	new_name = new_path + '/' + orig_filename + '.wav'
+	cmd = 'sox {0} {1} channels 1'.format(quote(filename), quote(new_name))
+	os.system(cmd)
+	return new_name
+
 
 def convert_folder_to_wav(directory):
 	for file in os.listdir(directory):
 		if file.endswith('.mp3'):
 			convert_mp3_to_wav(directory+file)
+		if file.endswith('.flac'):
+			convert_flac_to_wav(directory+file)
 	return directory + 'wave/'
 
 def read_wav_as_np(filename):
