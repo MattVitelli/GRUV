@@ -2,8 +2,9 @@ import os
 import scipy.io.wavfile as wav
 import numpy as np
 from pipes import quote
+from config import nn_config
 
-def convert_mp3_to_wav(filename):
+def convert_mp3_to_wav(filename, sample_frequency):
 	ext = filename[-4:]
 	if(ext != '.mp3'):
 		return
@@ -23,13 +24,14 @@ def convert_mp3_to_wav(filename):
 		os.makedirs(tmp_path)
 	filename_tmp = tmp_path + '/' + orig_filename + '.mp3'
 	new_name = new_path + '/' + orig_filename + '.wav'
+	sample_freq_str = "{0:.1f}".format(float(sample_frequency)/1000.0)
 	cmd = 'lame -a -m m {0} {1}'.format(quote(filename), quote(filename_tmp))
 	os.system(cmd)
-	cmd = 'lame --decode {0} {1}'.format(quote(filename_tmp), quote(new_name))
+	cmd = 'lame --decode {0} {1} --resample {2}'.format(quote(filename_tmp), quote(new_name), sample_freq_str)
 	os.system(cmd)
 	return new_name
 
-def convert_flac_to_wav(filename):
+def convert_flac_to_wav(filename, sample_frequency):
 	ext = filename[-5:]
 	if(ext != '.flac'):
 		return
@@ -45,17 +47,18 @@ def convert_flac_to_wav(filename):
 	if not os.path.exists(new_path):
 		os.makedirs(new_path)
 	new_name = new_path + '/' + orig_filename + '.wav'
-	cmd = 'sox {0} {1} channels 1 rate 44100'.format(quote(filename), quote(new_name))
+	cmd = 'sox {0} {1} channels 1 rate {2}'.format(quote(filename), quote(new_name), sample_frequency)
 	os.system(cmd)
 	return new_name
 
 
-def convert_folder_to_wav(directory):
+def convert_folder_to_wav(directory, sample_rate=44100):
 	for file in os.listdir(directory):
+		fullfilename = directory+file
 		if file.endswith('.mp3'):
-			convert_mp3_to_wav(directory+file)
+			convert_mp3_to_wav(filename=fullfilename, sample_frequency=sample_rate)
 		if file.endswith('.flac'):
-			convert_flac_to_wav(directory+file)
+			convert_flac_to_wav(filename=fullfilename, sample_frequency=sample_rate)
 	return directory + 'wave/'
 
 def read_wav_as_np(filename):
@@ -175,13 +178,13 @@ def load_training_example(filename, block_size=2048, useTimeDomain=False):
 	Y = time_blocks_to_fft_blocks(y_t)
 	return X, Y
 
-def save_generated_example(filename, generated_sequence, useTimeDomain=False):
+def save_generated_example(filename, generated_sequence, useTimeDomain=False, sample_frequency=44100):
 	if useTimeDomain:
 		time_blocks = generated_sequence
 	else:
 		time_blocks = fft_blocks_to_time_blocks(generated_sequence)
 	song = convert_sample_blocks_to_np_audio(time_blocks)
-	write_np_as_wav(song, 44100, filename)
+	write_np_as_wav(song, sample_frequency, filename)
 	return
 
 def audio_unit_test(filename, filename2):

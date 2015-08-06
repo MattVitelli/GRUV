@@ -9,6 +9,7 @@ from data_utils.parse_files import *
 import config.nn_config as nn_config
 
 config = nn_config.get_neural_net_configuration()
+sample_frequency = config['sampling_frequency']
 inputFile = config['model_file']
 model_basename = config['model_basename']
 cur_iter = 25
@@ -59,4 +60,4 @@ output = sequence_generator.generate_from_seed(model=model, seed=seed_seq,
 print ('Finished generation!')
 
 #Save the generated sequence to a WAV file
-save_generated_example(output_filename, output)
+save_generated_example(output_filename, output, sample_frequency=sample_frequency)
