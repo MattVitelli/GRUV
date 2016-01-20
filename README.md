@@ -1,6 +1,8 @@
 # GRUV
 GRUV is a Python project for algorithmic music generation using recurrent neural networks.
 
+Note: This code works with Keras v. 0.1.0, later versions of Keras may not work.
+
 For a demonstration of our project on raw audio waveforms (as opposed to the standard MIDI), see here: https://www.youtube.com/watch?v=0VTI1BBLydE
 
 Copyright (C) 2015 Matt Vitelli matthew.vitelli@gmail.com and Aran Nayebi aran.nayebi@gmail.com
