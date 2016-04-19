@@ -10,7 +10,7 @@ def generate_from_seed(model, seed, sequence_length, data_variance, data_mean):
 	#Step 2 - Concatenate X_n + 1 onto A
 	#Step 3 - Repeat MAX_SEQ_LEN times
 	for it in xrange(sequence_length):
-		seedSeqNew = model._predict(seedSeq) #Step 1. Generate X_n + 1
+		seedSeqNew = model.predict(seedSeq) #Step 1. Generate X_n + 1
 		#Step 2. Append it to the sequence
 		if it == 0:
 			for i in xrange(seedSeqNew.shape[1]):
